@@ -14,7 +14,7 @@
 		<ul>
 			<li>Try loggin into an existing account, creating an account, allowing, and even denying</li>
 			<li>Once it is complete, it will update the local configuration</li>
-			<li>You will want to <a href="https://www.copy.com/applications/my_apps" target="_blank">Revoke Apps</a> that you have allowed if you want to test the process again</li>
+			<li>You will want to <a href="https://www.copy.com/profile/apps" target="_blank">Revoke Apps</a> that you have allowed if you want to test the process again</li>
 		</ul>
 	</li>
 	<li><a href="api_call.php?method=get&endpoint=user&body=">Perform API Calls</a>
