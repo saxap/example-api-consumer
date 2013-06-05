@@ -46,13 +46,7 @@ $tokenInfo = null;
 try {
 	$OAuth              = new OAuth($consumerKey, $consumerSecret);
 	$OAuth->enableDebug();
-	$tokenInfo          = $OAuth->getRequestToken(
-		$requestURL .
-		'?oauth_callback=' .
-		$callbackURL .
-		'&scope=' .
-		urlencode($scope)
-	);
+	$tokenInfo          = $OAuth->getRequestToken($requestURL. '?scope=' . urlencode($scope), $callbackURL);
 } catch (Exception $E) {
 	echo '<pre>';
 	var_dump($E->getMessage());
