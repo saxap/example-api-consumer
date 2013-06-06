@@ -7,6 +7,7 @@
 
 require_once __DIR__ . '/config.php';
 
+// ENABLE PER-REQUEST PERMISSIONS
 $scope = json_encode(array(
 	'profile' => array(
 		'read' => true,
@@ -40,13 +41,15 @@ $scope = json_encode(array(
 		'write' => true,
 	),
 ));
+//$requestURL .= '?scope=' . urlencode($scope);
+// /ENABLE PER-REQUEST PERMISSIONS
 
 session_start();
 $tokenInfo = null;
 try {
 	$OAuth              = new OAuth($consumerKey, $consumerSecret);
 	$OAuth->enableDebug();
-	$tokenInfo          = $OAuth->getRequestToken($requestURL. '?scope=' . urlencode($scope), $callbackURL);
+	$tokenInfo          = $OAuth->getRequestToken($requestURL, $callbackURL);
 } catch (Exception $E) {
 	echo '<pre>';
 	var_dump($E->getMessage());
