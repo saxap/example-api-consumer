@@ -10,9 +10,9 @@ require_once __DIR__ . '/config.php';
 session_start();
 
 try {
-	$OAuth              = new OAuth($consumerKey, $consumerSecret);
+	$OAuth = new OAuth($consumerKey, $consumerSecret);
 	$OAuth->setToken($_GET['oauth_token'], $_SESSION['oauth_token_secret']);
-	$tokenInfo          = $OAuth->getAccessToken($accessURL . '?oauth_verifier=' . $_GET['oauth_verifier']);
+	$tokenInfo = $OAuth->getAccessToken($accessURL);
 
 	// Open and decode the file
 	$data = json_decode(file_get_contents('keys.json'));
