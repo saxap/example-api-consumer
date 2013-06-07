@@ -39,7 +39,7 @@ if (!empty($_POST)) {
 <p>Use this form to set the OAuth Consumer Key and Secret you received while creating a Copy application.</p>
 
 <form method="post" action="">
-	<input placeholder="Consumer Key" name="consumer_key" /><br />
+	<input placeholder="Consumer Key" name="consumer_key" autofocus="autofocus" /><br />
 	<input placeholder="Consumer Secret" name="consumer_secret" /><br />
 	<input type="submit" value="Save Consumer Info" />
 </form>

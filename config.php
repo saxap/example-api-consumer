@@ -20,4 +20,4 @@ $apiURL	 		= 'https://api.copy.com/rest/';
 $authorizeURL   = 'https://www.copy.com/applications/authorize';
 
 // This URL points to your local third party app
-$callbackURL    = 'http://copy-oauth.local/get_access_token.php';
+$callbackURL    = 'http://' . $_SERVER['SERVER_NAME'] . '/get_access_token.php';
