@@ -7,43 +7,60 @@
 
 require_once __DIR__ . '/config.php';
 
-// ENABLE PER-REQUEST PERMISSIONS
-$scope = json_encode(array(
-	'profile' => array(
-		'read' => true,
-		'write' => true,
-		'email' => array(
-			'read' => true,
-		),
-	),
-	'inbox' => array(
-		'read' => true,
-	),
-	'company' => array(
-		'multi' => true,
-		'filesystem' => array(
+if (isset($_GET['scope'])) {
+	$scope = (array(
+		'profile' => array(
 			'read' => true,
 			'write' => true,
+			'email' => array(
+				'read' => true,
+			),
 		),
 		'inbox' => array(
 			'read' => true,
 		),
-		'email' => array(
-			'read' => true,
+		'company' => array(
+			'multi' => true,
+			'filesystem' => array(
+				'read' => true,
+				'write' => true,
+			),
+			'inbox' => array(
+				'read' => true,
+			),
+			'email' => array(
+				'read' => true,
+			),
 		),
-	),
-	'links' => array(
-		'read' => true,
-		'write' => true,
-	),
-	'filesystem' => array(
-		'read' => true,
-		'write' => true,
-	),
-));
-//$requestURL .= '?scope=' . urlencode($scope);
-// /ENABLE PER-REQUEST PERMISSIONS
+		'links' => array(
+			'read' => true,
+			'write' => true,
+		),
+		'filesystem' => array(
+			'read' => true,
+			'write' => true,
+		),
+	));
 
+	if ($_GET['scope'] == 'profile-only') {
+		unset($scope['inbox']);
+		unset($scope['company']);
+		unset($scope['links']);
+		unset($scope['filesystem']);
+	} else if ($_GET['scope'] == 'filesystem-read') {
+		unset($scope['profile']);
+		unset($scope['inbox']);
+		unset($scope['company']);
+		unset($scope['links']);
+		$scope['filesystem']['write'] = false;
+	} else if ($_GET['scope'] == 'none') {
+		$scope = array();
+	}
+
+	$scope = json_encode($scope);
+	$requestURL .= '?scope=' . urlencode($scope);
+
+}
 session_start();
 $tokenInfo = null;
 try {

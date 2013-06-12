@@ -13,7 +13,7 @@
 			<li>Protip: Set both to blank if you want to reset all keys</li>
 		</ul>
 	</li>
-	<li><?php if (@$config->consumer->key && @$config->consumer->secret) { ?><a href="get_request_token.php">Perform OAuth Dance</a>
+	<li><?php if (@$config->consumer->key && @$config->consumer->secret) { ?>Perform OAuth Dance | <a href="get_request_token.php">Default App Permissions</a> | <a href="get_request_token.php?scope=filesystem-read">Filesystem Read</a> | <a href="get_request_token.php?scope=profile-only">Profile</a> | <a href="get_request_token.php?scope=all">All</a> | <a href="get_request_token.php?scope=none">None</a>
 		<ul>
 			<?php if (@$config->access->token || @$config->access->secret) { ?><li><em>The existing Access Token &amp; Secret will be ignored &amp; overwriten</em></li><?php } ?>
 			<li>Once the process completes, the Access Token &amp; Secret will be updated in this tool</li>
