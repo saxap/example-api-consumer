@@ -69,7 +69,7 @@ if (strpos($response['content_type'], 'image/') === 0) {
 		echo "<pre class='prettyprint'><code class='language-javascript'>" . json_prettify($body) . "</code></pre>\n";
 	} else {
 		echo "<h2>Response Body <small>(Invalid JSON)</small></h2>\n";
-		echo "<pre>$body</pre>";
+		echo "<pre>" . htmlentities($body) . "</pre>";
 	}
 
 	echo "<h2>Response Headers</h2>\n<pre>{$response['headers_recv']}</pre>\n";

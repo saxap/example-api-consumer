@@ -69,16 +69,20 @@ try {
 	$tokenInfo          = $OAuth->getRequestToken($requestURL, $callbackURL);
 } catch (Exception $E) {
 	echo '<pre>';
-	var_dump($E->getMessage());
-	var_dump($OAuth->getLastResponse());
-	var_dump($OAuth->getLastResponseInfo());
-	var_dump($OAuth->debugInfo); // get info about headers
+	echo "Message:\n";
+	print_r($E->getMessage());
+	echo "\n\nLast Response:\n";
+	print_r($OAuth->getLastResponse());
+	echo "\n\nLast Response Info:\n";
+	print_r($OAuth->getLastResponseInfo());
+	echo "\n\nDebug Info:\n";
+	print_r($OAuth->debugInfo); // get info about headers
 	echo '</pre>';
 }
 
 if (empty($tokenInfo['oauth_token_secret']) || empty($tokenInfo['oauth_token'])) {
-	echo '<pre>Token Info';
-	var_dump($tokenInfo);
+	echo "<pre>Token Info:\n";
+	print_r($tokenInfo);
 	echo '</pre>';
 	exit;
 }
