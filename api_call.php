@@ -29,6 +29,7 @@ $additional_errors = null;
 $OAuth	= new OAuth($consumerKey, $consumerSecret);
 $OAuth->setToken($token, $tokenSecret);
 $OAuth->enableDebug();
+if ($self_signed) $OAuth->disableSSLChecks();
 
 try {
 	$result = $OAuth->fetch($apiURL . $endpoint, $body, $method, array(

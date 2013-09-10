@@ -66,6 +66,7 @@ $tokenInfo = null;
 try {
 	$OAuth              = new OAuth($consumerKey, $consumerSecret);
 	$OAuth->enableDebug();
+	if ($self_signed) $OAuth->disableSSLChecks();
 	$tokenInfo          = $OAuth->getRequestToken($requestURL, $callbackURL);
 } catch (Exception $E) {
 	echo '<pre>';

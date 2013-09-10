@@ -11,6 +11,7 @@ session_start();
 
 try {
 	$OAuth = new OAuth($consumerKey, $consumerSecret);
+	if ($self_signed) $OAuth->disableSSLChecks();
 	$OAuth->setToken($_GET['oauth_token'], $_SESSION['oauth_token_secret']);
 	$tokenInfo = $OAuth->getAccessToken($accessURL);
 
