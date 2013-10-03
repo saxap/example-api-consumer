@@ -21,7 +21,7 @@
 	<strong>You need to set a Consumer Key / Secret before you can perform the OAuth dance.</strong>
 	<?php } ?>
 	</li>
-	<li><?php if (@$keys->access->token && @$keys->access->secret) { ?><a href="api_call.php?method=get&endpoint=user&body=">Perform API Calls</a>
+	<li><?php if (@$keys->access->token && @$keys->access->secret) { ?><a href="api_call.php?method=get&endpoint=user&body=">Perform API Calls</a> | <a href="file_upload.php">Upload Files</a>
 		<ul>
 			<li>Change <code>method</code> in the URL to the type of action you want to perform (e.g. <code>get</code>, <code>post</code>, <code>put</code>, <code>delete</code>)</li>
 			<li>Change <code>endpoint</code> in the URL to set the name of the API call (e.g. <code>links/LINKID</code>)</li>

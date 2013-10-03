@@ -41,7 +41,7 @@ try {
 	$additional_errors = $E->getMessage();
 }
 
-$body = $OAuth->getLastResponse();
+$response_body = $OAuth->getLastResponse();
 $response = $OAuth->getLastResponseInfo();
 $debug = $OAuth->debugInfo;
 
@@ -65,18 +65,21 @@ if (strpos($response['content_type'], 'image/') === 0) {
 	echo "<h1>$method {$response['url']}</h1>\n";
 	echo "<p><a href='index.php'>Return to Main Screen</a></p>\n";
 
-	if ($body_decoded = @json_decode($body)) {
+	if ($body_decoded = @json_decode($response_body)) {
 		echo "<h2>Response Body <small>(Valid JSON)</small></h2>\n";
-		echo "<pre class='prettyprint'><code class='language-javascript'>" . json_prettify($body) . "</code></pre>\n";
+		echo "<pre class='prettyprint'><code class='language-javascript'>" . json_prettify($response_body) . "</code></pre>\n";
 	} else {
 		echo "<h2>Response Body <small>(Invalid JSON)</small></h2>\n";
-		echo "<pre>" . htmlentities($body) . "</pre>";
+		echo "<pre>" . htmlentities($response_body) . "</pre>";
 	}
 
 	echo "<h2>Response Headers</h2>\n<pre>{$response['headers_recv']}</pre>\n";
 
 	echo "<hr />\n";
 	echo "<h2>Request Headers</h2>\n<pre>{$debug['headers_sent']}</pre>\n";
+
+	echo "<hr />\n";
+	echo "<h2>Request Body</h2>\n<pre>" . json_prettify($body) . "</pre>\n";
 
 	if ($additional_errors) {
 		echo "<hr />\n";
@@ -85,59 +88,4 @@ if (strpos($response['content_type'], 'image/') === 0) {
 	}
 
 	echo "</body>\n";
-}
-
-function json_prettify($json) {
-	if (strnatcmp(phpversion(),'5.4.0') >= 0) {
-		return json_encode(json_decode($json), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
-	} else {
-
-		$result      = '';
-		$pos         = 0;
-		$strLen      = strlen($json);
-		$indentStr   = '  ';
-		$newLine     = "\n";
-		$prevChar    = '';
-		$outOfQuotes = true;
-
-		for ($i=0; $i<=$strLen; $i++) {
-
-			// Grab the next character in the string.
-			$char = substr($json, $i, 1);
-
-			// Are we inside a quoted string?
-			if ($char == '"' && $prevChar != '\\') {
-				$outOfQuotes = !$outOfQuotes;
-
-			// If this character is the end of an element,
-			// output a new line and indent the next line.
-			} else if(($char == '}' || $char == ']') && $outOfQuotes) {
-				$result .= $newLine;
-				$pos --;
-				for ($j=0; $j<$pos; $j++) {
-					$result .= $indentStr;
-				}
-			}
-
-			// Add the character to the result string.
-			$result .= $char;
-
-			// If the last character was the beginning of an element,
-			// output a new line and indent the next line.
-			if (($char == ',' || $char == '{' || $char == '[') && $outOfQuotes) {
-				$result .= $newLine;
-				if ($char == '{' || $char == '[') {
-					$pos ++;
-				}
-
-				for ($j = 0; $j < $pos; $j++) {
-					$result .= $indentStr;
-				}
-			}
-
-			$prevChar = $char;
-		}
-
-		return $result;
-	}
 }
