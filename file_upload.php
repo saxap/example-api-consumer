@@ -54,7 +54,7 @@ $additional_errors = null;
 
 $encoded_file = base64_encode(file_get_contents($_FILES['file']['tmp_name']));
 //$encoded_file = rtrim($encoded_file, '='); // TODO: Does this follow spec?
-$encoded_file = chunk_split($encoded_file, 64, "\n");
+$encoded_file = trim(chunk_split($encoded_file, 64, "\n"));
 
 $body = <<<UPLOADBODY
 ------$boundary
