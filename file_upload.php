@@ -52,9 +52,10 @@ $boundary = "WebKitFormBoundary5dcD4Bk7SevSsaMg";
 
 $additional_errors = null;
 
-$encoded_file = base64_encode(file_get_contents($_FILES['file']['tmp_name']));
-//$encoded_file = rtrim($encoded_file, '='); // TODO: Does this follow spec?
-$encoded_file = trim(chunk_split($encoded_file, 64, "\n"));
+$encoded_file = file_get_contents($_FILES['file']['tmp_name']);
+//$encoded_file = base64_encode($encoded_file);										// Base64 Encode file contents
+//$encoded_file = rtrim($encoded_file, '=');										// Remove trailing Base64 ='s
+//$encoded_file = trim(chunk_split($encoded_file, 64, "\n"));						// Split it into 64 byte columns
 
 $body = <<<UPLOADBODY
 ------$boundary
