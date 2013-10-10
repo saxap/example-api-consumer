@@ -65,24 +65,30 @@ if (strpos($response['content_type'], 'image/') === 0) {
 	echo "<h1>$method {$response['url']}</h1>\n";
 	echo "<p><a href='index.php'>Return to Main Screen</a></p>\n";
 
+	// REQUEST
+
+	echo "<h2>Request</h2>\n";
+	echo "<pre>{$debug['headers_sent']}</pre>\n";
+	if ($body) {
+		echo "<pre>" . json_prettify($body) . "</pre>\n";
+	}
+	echo "<hr />\n";
+
+	// RESPONSE
+
+	echo "<h2>Response</h2>\n";
+	echo "<pre>{$response['headers_recv']}</pre>\n";
 	if ($body_decoded = @json_decode($response_body)) {
-		echo "<h2>Response Body <small>(Valid JSON)</small></h2>\n";
 		echo "<pre class='prettyprint'><code class='language-javascript'>" . json_prettify($response_body) . "</code></pre>\n";
 	} else {
-		echo "<h2>Response Body <small>(Invalid JSON)</small></h2>\n";
-		echo "<pre>" . htmlentities($response_body) . "</pre>";
+		echo "<pre>" . htmlentities($response_body) . "</pre>\n";
 	}
 
-	echo "<h2>Response Headers</h2>\n<pre>{$response['headers_recv']}</pre>\n";
-
-	echo "<hr />\n";
-	echo "<h2>Request Headers</h2>\n<pre>{$debug['headers_sent']}</pre>\n";
-
-	echo "<hr />\n";
-	echo "<h2>Request Body</h2>\n<pre>" . json_prettify($body) . "</pre>\n";
+	// ADDITIONAL ERRORS
 
 	if ($additional_errors) {
 		echo "<hr />\n";
+
 		echo "<h2>Additional OAuth Client Errors</h2>\n";
 		echo "<pre>$additional_errors</pre>\n";
 	}
