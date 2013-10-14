@@ -58,6 +58,10 @@ if (strpos($response['content_type'], 'image/') === 0) {
 	body.S201 h1 {
 		color: green;
 	}
+	body pre.prettyprint { /* Going for the complete HTTP packet look */
+        padding: 0px;
+        border: 0px;
+    }
 </style>
 <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
 <?php
@@ -78,7 +82,9 @@ if (strpos($response['content_type'], 'image/') === 0) {
 
 	echo "<h2>Response</h2>\n";
 	echo "<pre>{$response['headers_recv']}</pre>\n";
-	if ($body_decoded = @json_decode($response_body)) {
+	if (!$response_body) {
+		echo "<div><em>&lt;empty body&gt;</em></div>\n";
+	} else if ($body_decoded = @json_decode($response_body)) {
 		echo "<pre class='prettyprint'><code class='language-javascript'>" . json_prettify($response_body) . "</code></pre>\n";
 	} else {
 		echo "<pre>" . htmlentities($response_body) . "</pre>\n";
