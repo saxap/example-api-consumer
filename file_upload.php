@@ -38,7 +38,11 @@ session_start();
 
 <p><a href="https://www.copy.com/developer/documentation#api-calls/filesystem" target="_blank">Documentation</a></p>
 
-<?php if (!$_POST) exit; if (!$_FILES) die("Please upload a file"); ?>
+<?php
+if (!$_POST) exit;
+if (!$_FILES) die("Please upload a file!");
+if ($_FILES['file']['error']) die("There was a file upload error!");
+?>
 
 <hr />
 
@@ -48,7 +52,7 @@ $filename = !empty($_POST['filename']) ? $_POST['filename'] : $_FILES['file']['n
 $method = 'POST';
 $overwrite = empty($_POST['overwrite']) ? '?overwrite=false' : '';
 
-$boundary = "WebKitFormBoundary5dcD4Bk7SevSsaMg";
+$boundary = "FormBoundary" . rand(1000000,9999999);
 
 $additional_errors = null;
 
@@ -62,12 +66,9 @@ $body = <<<UPLOADBODY
 Content-Disposition: form-data; name="file"; filename="$filename"
 Content-Type: application/octet-stream
 
-$encoded_file
+RAW_FILE_CONTENTS
 ------$boundary--
 UPLOADBODY;
-
-// mmm we've now used FILE_SIZE * ~1.5 * 2 memory
-unset($encoded_file);
 
 $OAuth	= new OAuth($consumerKey, $consumerSecret);
 $OAuth->setToken($token, $tokenSecret);
@@ -75,7 +76,7 @@ $OAuth->enableDebug();
 if ($self_signed) $OAuth->disableSSLChecks();
 
 try {
-	$result = $OAuth->fetch($apiURL . $endpoint . $overwrite, $body, $method, array(
+	$result = $OAuth->fetch($apiURL . $endpoint . $overwrite, str_replace('RAW_FILE_CONTENTS', $encoded_file, $body), $method, array(
 		'X-Api-Version' => '1',
 		'Accept' => 'application/json',
 		'Content-Type' => "multipart/form-data; boundary=----$boundary"
@@ -84,6 +85,8 @@ try {
 } catch (OAuthException $E) {
 	$additional_errors = $E->getMessage();
 }
+
+unset($encoded_file);
 
 $response_body = $OAuth->getLastResponse();
 $response = $OAuth->getLastResponseInfo();
@@ -98,6 +101,10 @@ $debug = $OAuth->debugInfo;
 	body.S201 h1 {
 		color: green;
 	}
+	body pre.prettyprint { /* Going for the complete HTTP packet look */
+		padding: 0px;
+		border: 0px;
+	}
 </style>
 <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
 <?php
@@ -105,21 +112,26 @@ echo "<body class='S{$response['http_code']}'>\n";
 echo "<h1>$method {$response['url']}</h1>\n";
 echo "<p><a href='index.php'>Return to Main Screen</a></p>\n";
 
-if ($body_decoded = @json_decode($response_body)) {
-	echo "<h2>Response Body <small>(Valid JSON)</small></h2>\n";
+// REQUEST
+
+echo "<h2>Request</h2>\n";
+echo "<pre>{$debug['headers_sent']}</pre>\n";
+if ($body) {
+	echo "<pre>$body</pre>\n";
+}
+echo "<hr />\n";
+
+// RESPONSE
+
+echo "<h2>Response</h2>\n";
+echo "<pre>{$response['headers_recv']}</pre>\n";
+if (!$response_body) {
+	echo "<div><em>&lt;empty body&gt;</em></div>\n";
+} else if ($body_decoded = @json_decode($response_body)) {
 	echo "<pre class='prettyprint'><code class='language-javascript'>" . json_prettify($response_body) . "</code></pre>\n";
 } else {
-	echo "<h2>Response Body <small>(Invalid JSON)</small></h2>\n";
-	echo "<pre>" . htmlentities($response_body) . "</pre>";
+	echo "<pre>" . htmlentities($response_body) . "</pre>\n";
 }
-
-echo "<h2>Response Headers</h2>\n<pre>{$response['headers_recv']}</pre>\n";
-
-echo "<hr />\n";
-echo "<h2>Request Headers</h2>\n<pre>{$debug['headers_sent']}</pre>\n";
-
-echo "<hr />\n";
-echo "<h2>Request Body</h2>\n<pre>{$body}</pre>\n";
 
 if ($additional_errors) {
 	echo "<hr />\n";
