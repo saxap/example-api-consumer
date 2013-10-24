@@ -13,10 +13,27 @@ try {
 	$OAuth = new OAuth($consumerKey, $consumerSecret);
 	if ($self_signed) $OAuth->disableSSLChecks();
 	$OAuth->setToken($_GET['oauth_token'], $_SESSION['oauth_token_secret']);
+	$OAuth->enableDebug();
 	$tokenInfo = $OAuth->getAccessToken($accessURL);
 
+	$response_body = $OAuth->getLastResponse();
+	$response = $OAuth->getLastResponseInfo();
+	$debug = $OAuth->debugInfo;
+
+	echo "<h1>Requesting an Access Token</h1>\n";
+
+	echo "<p>Copy has redirected the user agent from the copy website to this consumer website. You can look at the URL to see which GET parameters have been added.</p>";
+
+	echo "<h2>Request</h2>\n";
+	echo "<pre>{$debug['headers_sent']}</pre>\n";
+	echo "<hr />\n";
+
+	echo "<h2>Response</h2>\n";
+	echo "<pre>{$response['headers_recv']}</pre>\n";
+	echo "<pre>" . htmlentities($response_body) . "</pre>\n";
+
 	if (!isset($tokenInfo['oauth_token']) || !isset($tokenInfo['oauth_token_secret'])) {
-		echo "<h1>Error Retreiving oauth_token and oauth_token_secret</h1>\n";
+		echo "<h2>Error Retrieving oauth_token and oauth_token_secret</h2>\n";
 		echo "<pre>RESPONSE:\n";
 		echo $OAuth->getLastResponse();
 		echo "\nRESPONSE INFO:\n";
@@ -24,6 +41,8 @@ try {
 		echo '</pre>';
 		exit();
 	}
+
+	echo "<hr />\n";
 
 	// Open and decode the file
 	$data = json_decode(file_get_contents('keys.json'));
@@ -45,7 +64,7 @@ try {
 	fclose($handle);
 	
 ?>
-<h1>Access Token/Secrets have been set.</h1>
+<h1>Access Token & Secret saved</h1>
 
 <pre>Access Token:       <?php echo $tokenInfo['oauth_token']; ?>
 
