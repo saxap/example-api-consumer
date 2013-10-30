@@ -1,4 +1,5 @@
 <?php
+set_time_limit(0); // File uploads can be big
 require_once __DIR__ . '/config.php';
 session_start();
 ?>
@@ -41,7 +42,7 @@ session_start();
 <?php
 if (!$_POST) exit;
 if (!$_FILES) die("Please upload a file!");
-if ($_FILES['file']['error']) die("There was a file upload error!");
+if ($_FILES['file']['error']) die("There was an error uploading a file to your server. Do you have everything configured correctly?");
 ?>
 
 <hr />
