@@ -5,6 +5,8 @@
  * @author      Freek Lijten <freek@procurios.nl>
  */
 
+error_reporting(E_ALL);
+
 //$server = "api.copy.local";
 //$secure = false;
 //$self_signed = true;
